@@ -1,5 +1,6 @@
 package com.company;
 
+import java.sql.SQLException;
 import java.util.*;
 
 
@@ -11,6 +12,13 @@ public class ShoppingSystem {
             Map<String, Customer> customers = new HashMap<>();
             Customer customer = new Customer();
 
+            try {
+                admin.loadDataFromDatabase();
+                System.out.println("Data loaded from MySQL database successfully.");
+            } catch (SQLException e) {
+                System.out.println("Failed to load data from MySQL database. Starting fresh.");
+            }
+
             while (true) {
                 System.out.println("Welcome to the Shopping System");
                 System.out.println("Are you an Admin or Customer? (A/C)");
@@ -21,6 +29,12 @@ public class ShoppingSystem {
                 } else if (userType.equalsIgnoreCase("C")) {
                     handleCustomerActions(customers, customer);
                 } else {
+                    try {
+                        admin.saveDataToDatabase();
+                        System.out.println("Data saved to MySQL database successfully.");
+                    } catch (SQLException e) {
+                        System.out.println("Failed to save data to MySQL database.");
+                    }
                     System.out.println("Invalid choice: Exiting...");
                     return;
                 }
@@ -67,6 +81,12 @@ public class ShoppingSystem {
                         admin.changePassword(newPassword);
                         break;
                     case 4:
+                        try {
+                            admin.saveDataToDatabase();
+                            System.out.println("Data saved successfully. Logging out.");
+                        } catch (SQLException e) {
+                            System.out.println("Failed to save data.");
+                        }
                         return;
                     default:
                         System.out.println("Invalid choice. Try again.");

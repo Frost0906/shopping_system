@@ -21,7 +21,6 @@ public final class Customer extends User {
 
     public Customer(String username, String password, String userId, String email) {
         super(username, password, userId, email);
-        this.orderHistory = ExcelManager.loadOrdersFromExcel();
     }
 
     public Customer(String username, String password, String phoneNumber, String email, String level, Date registrationDate, double totalExpenditure) {
@@ -52,17 +51,14 @@ public final class Customer extends User {
             case 1:
                 cart.checkout();
                 Payment.alipay();
-                ExcelManager.saveOrdersToExcel(orderHistory);
                 break;
             case 2:
                 cart.checkout();
                 Payment.wechat();
-                ExcelManager.saveOrdersToExcel(orderHistory);
                 break;
             case 3:
                 cart.checkout();
                 Payment.bankcard();
-                ExcelManager.saveOrdersToExcel(orderHistory);
                 break;
             default:
                 System.out.println("Invalid selection!");

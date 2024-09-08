@@ -37,5 +37,12 @@ public class Product {
         this.retailPrice = retailPrice;
         this.quantity = quantity;
     }
+
+    public Product(String productId, String name, String manufacturer, String s, int i, double price, int quantity) {
+        this.productId = productId;
+        this.name = name;
+        this.manufacturer = manufacturer;
+        this.quantity = quantity;
+    }
 }
 

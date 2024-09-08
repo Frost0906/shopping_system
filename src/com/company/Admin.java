@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.*;
 
 @Getter
@@ -49,7 +50,6 @@ public final class Admin extends User implements ProductManager, CustomerManager
 
     public void addCustomer(Customer customer) {
         customers.put(customer.getUserId(), customer);
-        ExcelManager.saveCustomersToExcel(customers);
         System.out.println("Customer added successfully!");
     }
 
@@ -59,7 +59,6 @@ public final class Admin extends User implements ProductManager, CustomerManager
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().equalsIgnoreCase("Y")) {
                 customers.remove(customerId);
-                ExcelManager.saveCustomersToExcel(customers);
                 System.out.println("Customer removed.");
             }
         } else {
@@ -77,7 +76,6 @@ public final class Admin extends User implements ProductManager, CustomerManager
 
     public void addProduct(Product product) {
         products.put(product.getProductId(), product);
-        ExcelManager.saveProductsToExcel(products);
         System.out.println("Product added successfully!");
     }
 
@@ -88,7 +86,6 @@ public final class Admin extends User implements ProductManager, CustomerManager
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().equalsIgnoreCase("Y")) {
                 products.remove(productId);
-                ExcelManager.saveProductsToExcel(products);
                 System.out.println("Product removed.");
             }
         } else {
@@ -100,7 +97,6 @@ public final class Admin extends User implements ProductManager, CustomerManager
     public void modifyProduct(String productId, Product newProduct) {
         if (products.containsKey(productId)) {
             products.put(productId, newProduct);
-            ExcelManager.saveProductsToExcel(products);
             System.out.println("Product modified successfully!");
         } else {
             System.out.println("Product not found.");
@@ -122,5 +118,20 @@ public final class Admin extends User implements ProductManager, CustomerManager
                 System.out.println(product);
             }
         }
+    }
+
+    public void saveDataToDatabase() throws SQLException {
+        DatabaseManager.saveAdmin(this);
+        for (Customer customer : customers.values()) {
+            DatabaseManager.saveCustomer(customer);
+        }
+        for (Product product : products.values()) {
+            DatabaseManager.saveProduct(product);
+        }
+    }
+
+    public void loadDataFromDatabase() throws SQLException {
+        this.customers = DatabaseManager.loadCustomers();
+        this.products = DatabaseManager.loadProducts();
     }
 }

@@ -1,7 +1,5 @@
 package com.company;
 
-import java.util.Scanner;
-
 public interface ProductManager {
     public void listProducts();
     public void addProduct(Product product);

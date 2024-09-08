@@ -1,13 +1,24 @@
 package com.company;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.*;
 import java.util.*;
 
+@Getter
+@Setter
 public final class Admin extends User implements ProductManager, CustomerManager {
     private Map<String, Customer> customers = new HashMap<>();
     private Map<String, Product> products = new HashMap<>();
 
+    private final String customerFile = "C:\\Users\\Aurora\\Desktop\\Customers.txt";
+    private final String productFile = "C:\\Users\\Aurora\\Desktop\\Products.txt";
+
     public Admin(String username, String password) {
         super(username, password);
+        loadCustomersFromFile();
+        loadProductsFromFile();
     }
 
     @Override
@@ -38,6 +49,7 @@ public final class Admin extends User implements ProductManager, CustomerManager
 
     public void addCustomer(Customer customer) {
         customers.put(customer.getUserId(), customer);
+        saveCustomersToFile();
         System.out.println("Customer added successfully!");
     }
 
@@ -64,6 +76,7 @@ public final class Admin extends User implements ProductManager, CustomerManager
 
     public void addProduct(Product product) {
         products.put(product.getProductId(), product);
+        saveProductsToFile();
         System.out.println("Product added successfully!");
     }
 
@@ -105,6 +118,57 @@ public final class Admin extends User implements ProductManager, CustomerManager
                     product.getRetailPrice() > minPrice) {
                 System.out.println(product);
             }
+        }
+    }
+
+    public void saveCustomersToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(customerFile))) {
+            for (Customer customer : customers.values()) {
+                writer.write(customer.toFileFormat());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadCustomersFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(customerFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                Customer customer = new Customer(data[0], data[1], data[2], data[3]);
+                customers.put(customer.getUserId(), customer);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveProductsToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productFile))) {
+            for (Product product : products.values()) {
+                writer.write(product.toFileFormat());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadProductsFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(productFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                Product product = new Product(data[0], data[1], data[2], data[3],
+                        Integer.parseInt(data[4]),
+                        Double.parseDouble(data[5]),
+                        Integer.parseInt(data[6]));
+                products.put(product.getProductId(), product);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

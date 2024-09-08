@@ -5,9 +5,9 @@ import java.util.*;
 
 public class ShoppingSystem {
         private static Scanner scanner = new Scanner(System.in);
+    private static Admin admin = new Admin("admin", "ynuinfo#777");
 
         public static void main(String[] args) {
-            Admin admin = new Admin("admin", "ynuinfo#777");
             Map<String, Customer> customers = new HashMap<>();
             Customer customer = new Customer();
 
@@ -20,6 +20,11 @@ public class ShoppingSystem {
                     handleAdminLogin(admin);
                 } else if (userType.equalsIgnoreCase("C")) {
                     handleCustomerActions(customers, customer);
+                } else {
+                    admin.saveCustomersToFile();
+                    admin.saveProductsToFile();
+                    System.out.println("Invalid choice: Exiting...");
+                    return;
                 }
             }
         }
@@ -214,6 +219,7 @@ public class ShoppingSystem {
             String userId = UUID.randomUUID().toString();
             customer = new Customer(username, password, phoneNumber, email, userId);
             customers.put(userId, customer);
+            admin.addCustomer(customer);
             System.out.println("Customer registered successfully.");
         }
 

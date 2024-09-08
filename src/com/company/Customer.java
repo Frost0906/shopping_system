@@ -1,12 +1,13 @@
 package com.company;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Date;
 
 public final class Customer extends User {
+
+
     private String level = "铜牌客户";
     private Date registrationDate = new Date();
     private double totalExpenditure = 0.0;
@@ -16,6 +17,10 @@ public final class Customer extends User {
     public Customer() {}
     public Customer(String username, String password, String phoneNumber, String email, String userId) {
         super(username, password, userId);
+    }
+
+    public Customer(String username, String password, String userId, String email) {
+        super(username, password, userId, email);
     }
 
     public Customer(String username, String password, String phoneNumber, String email, String level, Date registrationDate, double totalExpenditure) {
@@ -64,6 +69,10 @@ public final class Customer extends User {
         for (Order order : orderHistory) {
             System.out.println(order);
         }
+    }
+
+    public String toFileFormat() {
+        return getUsername() + "," + getPassword() + "," + getUserId() + "," + getEmail();
     }
 }
 

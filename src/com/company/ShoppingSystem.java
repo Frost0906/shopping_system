@@ -21,8 +21,6 @@ public class ShoppingSystem {
                 } else if (userType.equalsIgnoreCase("C")) {
                     handleCustomerActions(customers, customer);
                 } else {
-                    admin.saveCustomersToFile();
-                    admin.saveProductsToFile();
                     System.out.println("Invalid choice: Exiting...");
                     return;
                 }

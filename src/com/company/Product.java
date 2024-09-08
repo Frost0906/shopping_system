@@ -28,7 +28,7 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public Product(String productId, String name, String manufacturer, String productionDate, int i, double retailPrice, int quantity) {
+    public Product(String productId, String name, String manufacturer, String productionDate, double retailPrice, int quantity) {
         this.productId = productId;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -36,10 +36,6 @@ public class Product {
         this.model = model;
         this.retailPrice = retailPrice;
         this.quantity = quantity;
-    }
-
-    public String toFileFormat() {
-        return productId + "," + name + "," + manufacturer + "," + model + "," + purchasePrice + "," + retailPrice + "," + quantity;
     }
 }
 

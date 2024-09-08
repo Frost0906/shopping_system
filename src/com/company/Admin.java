@@ -17,8 +17,8 @@ public final class Admin extends User implements ProductManager, CustomerManager
 
     public Admin(String username, String password) {
         super(username, password);
-        loadCustomersFromFile();
-        loadProductsFromFile();
+//        this.customers = ExcelManager.loadCustomersFromExcel();
+//        this.products = ExcelManager.loadProductsFromExcel();
     }
 
     @Override
@@ -49,7 +49,7 @@ public final class Admin extends User implements ProductManager, CustomerManager
 
     public void addCustomer(Customer customer) {
         customers.put(customer.getUserId(), customer);
-        saveCustomersToFile();
+        ExcelManager.saveCustomersToExcel(customers);
         System.out.println("Customer added successfully!");
     }
 
@@ -59,6 +59,7 @@ public final class Admin extends User implements ProductManager, CustomerManager
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().equalsIgnoreCase("Y")) {
                 customers.remove(customerId);
+                ExcelManager.saveCustomersToExcel(customers);
                 System.out.println("Customer removed.");
             }
         } else {
@@ -76,7 +77,7 @@ public final class Admin extends User implements ProductManager, CustomerManager
 
     public void addProduct(Product product) {
         products.put(product.getProductId(), product);
-        saveProductsToFile();
+        ExcelManager.saveProductsToExcel(products);
         System.out.println("Product added successfully!");
     }
 
@@ -87,6 +88,7 @@ public final class Admin extends User implements ProductManager, CustomerManager
             Scanner scanner = new Scanner(System.in);
             if (scanner.nextLine().equalsIgnoreCase("Y")) {
                 products.remove(productId);
+                ExcelManager.saveProductsToExcel(products);
                 System.out.println("Product removed.");
             }
         } else {
@@ -98,6 +100,7 @@ public final class Admin extends User implements ProductManager, CustomerManager
     public void modifyProduct(String productId, Product newProduct) {
         if (products.containsKey(productId)) {
             products.put(productId, newProduct);
+            ExcelManager.saveProductsToExcel(products);
             System.out.println("Product modified successfully!");
         } else {
             System.out.println("Product not found.");
@@ -118,57 +121,6 @@ public final class Admin extends User implements ProductManager, CustomerManager
                     product.getRetailPrice() > minPrice) {
                 System.out.println(product);
             }
-        }
-    }
-
-    public void saveCustomersToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(customerFile))) {
-            for (Customer customer : customers.values()) {
-                writer.write(customer.toFileFormat());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadCustomersFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(customerFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                Customer customer = new Customer(data[0], data[1], data[2], data[3]);
-                customers.put(customer.getUserId(), customer);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveProductsToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(productFile))) {
-            for (Product product : products.values()) {
-                writer.write(product.toFileFormat());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadProductsFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(productFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                Product product = new Product(data[0], data[1], data[2], data[3],
-                        Integer.parseInt(data[4]),
-                        Double.parseDouble(data[5]),
-                        Integer.parseInt(data[6]));
-                products.put(product.getProductId(), product);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
